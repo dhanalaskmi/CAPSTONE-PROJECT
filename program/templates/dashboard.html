@@ -1,0 +1,510 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Voice AI{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-slate-50 via-primary-50 to-slate-50 px-4 py-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold font-display text-slate-900 mb-2">Welcome back, <span class="gradient-text">{{ username }}</span>!</h1>
+      <p class="text-lg text-slate-600">Have an intelligent conversation powered by AI</p>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-6 mb-8 h-[700px]">
+      <!-- Main Chat Area - Scrollable -->
+      <div class="lg:col-span-3 flex flex-col overflow-y-auto pr-2">
+        <!-- Chat Window -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden flex flex-col h-[600px]">
+          <!-- Chat Header -->
+          <div class="bg-gradient-to-r from-primary-600 to-accent-600 px-6 py-4 text-white">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-semibold">Voice Chat</h2>
+                  <p class="text-xs text-white/80">AI Assistant Online</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="h-3 w-3 rounded-full bg-green-400 animate-pulse"></div>
+                <span class="text-sm font-medium">Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Container -->
+          <div id="chatWindow" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-white to-slate-50">
+            <!-- Messages will be appended here -->
+            <div class="flex items-center justify-center h-full text-slate-400">
+              <div class="text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <p class="text-sm">Start a conversation to begin</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <div class="border-t border-slate-200 bg-white p-4">
+            <div class="flex gap-3">
+              <input 
+                id="textInput" 
+                class="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all placeholder-slate-400 text-slate-900" 
+                placeholder="Type your message here..." 
+                autocomplete="off"
+              />
+              <button id="sendBtn" class="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Panel - Sticky -->
+      <div class="lg:col-span-1 space-y-4 sticky top-0 h-fit">
+        <!-- Voice Controls Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+          <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            Voice Control
+          </h3>
+          
+          <div class="space-y-3">
+            <button 
+              id="speakBtn" 
+              class="w-full bg-gradient-to-br from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line>
+                <line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2"></line>
+              </svg>
+              Start Speaking
+            </button>
+
+            <button 
+              id="stopSpeakBtn" 
+              class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 py-3 px-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              Stop
+            </button>
+          </div>
+        </div>
+
+        <!-- Audio Settings Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+          <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 3.54a9 9 0 0 1 0 12.72"></path>
+              <path d="M19.07 4.93a15 15 0 0 1 0 14.14"></path>
+            </svg>
+            Audio Settings
+          </h3>
+          
+          <button 
+            id="ttsToggle" 
+            class="w-full bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 3.54a9 9 0 0 1 0 12.72" stroke="currentColor" stroke-width="2" fill="none"></path>
+              <path d="M19.07 4.93a15 15 0 0 1 0 14.14" stroke="currentColor" stroke-width="2" fill="none"></path>
+            </svg>
+            <span id="ttsText">TTS: On</span>
+          </button>
+
+          <p class="text-xs text-slate-500 mt-3 text-center">Text-to-Speech will read AI responses</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl border border-primary-200 p-6">
+          <h3 class="text-sm font-bold text-slate-900 mb-4">Session Info</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600">Messages:</span>
+              <span class="font-semibold text-slate-900" id="msgCount">0</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600">Status:</span>
+              <span class="inline-flex items-center gap-1 text-green-600 font-semibold">
+                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                Ready
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clear Chat Button -->
+        <button 
+          id="clearChatBtn" 
+          class="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 4 21 4"></polyline>
+            <path d="M19 4v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4m3 0a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2m-11 4v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8M10 12v4M14 12v4"></path>
+          </svg>
+          Clear Chat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .lg\:col-span-3::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .lg\:col-span-3::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .lg\:col-span-3::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .lg\:col-span-3::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  .message-user {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  .message-assistant {
+    animation: slideInLeft 0.3s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .loading-dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .loading-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0284c7;
+    animation: bounce 1.4s infinite;
+  }
+
+  .loading-dots span:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes bounce {
+    0%, 80%, 100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const chatWindow = document.getElementById("chatWindow");
+  const textInput = document.getElementById("textInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const speakBtn = document.getElementById("speakBtn");
+  const stopSpeakBtn = document.getElementById("stopSpeakBtn");
+  const ttsToggle = document.getElementById("ttsToggle");
+  const msgCount = document.getElementById("msgCount");
+  const clearChatBtn = document.getElementById("clearChatBtn");
+
+  let ttsEnabled = true;
+  let messageCount = 0;
+
+  // Clear Chat Function
+  clearChatBtn.onclick = async () => {
+    if (confirm("Are you sure you want to clear all chat history? This cannot be undone.")) {
+      try {
+        clearChatBtn.disabled = true;
+        clearChatBtn.textContent = "Clearing...";
+
+        const res = await fetch("/api/clear-chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+        
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          // Clear UI
+          chatWindow.innerHTML = '';
+          messageCount = 0;
+          msgCount.textContent = "0";
+          
+          // Show success feedback
+          const tempMsg = document.createElement("div");
+          tempMsg.className = "flex justify-center";
+          const content = document.createElement("div");
+          content.className = "px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium";
+          content.textContent = "✓ Chat history cleared successfully";
+          tempMsg.appendChild(content);
+          chatWindow.appendChild(tempMsg);
+          
+          setTimeout(() => tempMsg.remove(), 3000);
+        } else {
+          alert("Error: " + (result.error || "Failed to clear chat"));
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error clearing chat: " + error.message);
+      } finally {
+        clearChatBtn.disabled = false;
+        clearChatBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 4 21 4"></polyline><path d="M19 4v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4m3 0a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2m-11 4v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8M10 12v4M14 12v4"></path></svg> Clear Chat';
+      }
+    }
+  };
+
+  // Clear initial placeholder
+  chatWindow.innerHTML = '';
+
+  // TTS Toggle
+  ttsToggle.onclick = () => {
+    ttsEnabled = !ttsEnabled;
+    document.getElementById("ttsText").textContent = ttsEnabled ? "TTS: On" : "TTS: Off";
+    ttsToggle.classList.toggle("from-green-500", ttsEnabled);
+    ttsToggle.classList.toggle("to-green-600", ttsEnabled);
+    ttsToggle.classList.toggle("from-slate-500", !ttsEnabled);
+    ttsToggle.classList.toggle("to-slate-600", !ttsEnabled);
+  };
+
+  function appendMessage(role, text, isLoading = false) {
+    const msgDiv = document.createElement("div");
+    msgDiv.className = `flex ${role === "user" ? "justify-end" : "justify-start"} message-${role}`;
+    
+    const contentDiv = document.createElement("div");
+    contentDiv.className = `max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
+      role === "user" 
+        ? "bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-br-none" 
+        : "bg-slate-100 text-slate-900 rounded-bl-none"
+    }`;
+
+    if (isLoading) {
+      contentDiv.innerHTML = `
+        <div class="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
+      contentDiv.dataset.loadingId = "loading";
+    } else {
+      contentDiv.textContent = text;
+    }
+
+    msgDiv.appendChild(contentDiv);
+    chatWindow.appendChild(msgDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    if (!isLoading && role === "assistant") {
+      messageCount++;
+      msgCount.textContent = messageCount;
+    }
+
+    return contentDiv;
+  }
+
+  // Send text message
+  async function sendTextMessage(text) {
+    appendMessage("user", text);
+    textInput.value = "";
+    sendBtn.disabled = true;
+    speakBtn.disabled = true;
+
+    // Show loading indicator
+    const loadingDiv = appendMessage("assistant", "", true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+      const reply = data.reply || "No response";
+
+      // Remove loading indicator
+      loadingDiv.parentElement.remove();
+
+      appendMessage("assistant", reply);
+      if (ttsEnabled) speakText(reply);
+    } catch (error) {
+      console.error("Error:", error);
+      loadingDiv.parentElement.remove();
+      appendMessage("assistant", "Sorry, I encountered an error. Please try again.");
+    } finally {
+      sendBtn.disabled = false;
+      speakBtn.disabled = false;
+      textInput.focus();
+    }
+  }
+
+  // Text send handlers
+  sendBtn.onclick = () => {
+    if (textInput.value.trim()) sendTextMessage(textInput.value.trim());
+  };
+  textInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (textInput.value.trim()) sendTextMessage(textInput.value.trim());
+    }
+  });
+
+  // Speech Recognition
+  let recognition;
+  if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+    speakBtn.disabled = true;
+    speakBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg> Not Supported';
+    appendMessage("assistant", "Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.");
+  } else {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      speakBtn.classList.add("from-primary-700", "to-primary-800");
+      speakBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-pulse" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2"></line></svg> Listening...';
+    };
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      recognition.stop();
+      sendTextMessage(transcript);
+    };
+
+    recognition.onend = () => {
+      speakBtn.classList.remove("from-primary-700", "to-primary-800");
+      speakBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2"></line></svg> Start Speaking';
+    };
+
+    recognition.onerror = function (event) {
+      console.error("Speech recognition error", event);
+      appendMessage("assistant", `Speech error: ${event.error}. Please try again.`);
+      recognition.stop();
+    };
+  }
+
+  speakBtn.onclick = () => {
+    if (recognition) recognition.start();
+  };
+
+  stopSpeakBtn.onclick = () => {
+    if (recognition) {
+      try {
+        recognition.stop();
+      } catch (e) {}
+    }
+    // Also stop TTS if playing
+    try {
+      const synth = window.speechSynthesis;
+      if (synth) {
+        synth.cancel();
+      }
+    } catch (e) {}
+  };
+
+  // Text-to-Speech
+  function speakText(text) {
+    try {
+      const synth = window.speechSynthesis;
+      if (!synth) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      utter.rate = 1;
+      utter.pitch = 1;
+      synth.cancel();
+      synth.speak(utter);
+    } catch (e) {
+      console.error("TTS error", e);
+    }
+  }
+
+  // Load history
+  async function loadHistory() {
+    try {
+      const res = await fetch("/api/history");
+      const arr = await res.json();
+      for (const m of arr) {
+        appendMessage(m.role, m.text);
+      }
+      messageCount = arr.length;
+      msgCount.textContent = messageCount;
+    } catch (e) {
+      console.error("Error loading history:", e);
+    }
+  }
+
+  loadHistory();
+</script>
+{% endblock %}
